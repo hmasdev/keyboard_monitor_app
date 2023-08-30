@@ -19,7 +19,19 @@ DEFAULT_RECORD_FILENAME = "%Y%m%d%H.json"
 @click.option("--record-dir", default=DEFAULT_RECORD_DIR, help=f"directory to save the records. Defaults to {DEFAULT_RECORD_DIR}")  # noqa
 @click.option("--record-filename", default=DEFAULT_RECORD_FILENAME, help=f"datetime format of the filename to save the records. Defaults to {DEFAULT_RECORD_FILENAME}")  # noqa
 @click.option("--log-level", default="INFO")
-def main(record_dir, record_filename, log_level):
+def cli(record_dir, record_filename, log_level):
+    main(
+        record_dir=record_dir,
+        record_filename=record_filename,
+        log_level=log_level,
+    )
+
+
+def main(
+    record_dir: str = DEFAULT_RECORD_DIR,
+    record_filename: str = DEFAULT_RECORD_FILENAME,
+    log_level: str = "INFO",
+):
 
     # setup
     ###########################################################
@@ -60,4 +72,4 @@ def main(record_dir, record_filename, log_level):
 
 
 if __name__ == "__main__":
-    main()
+    cli()
