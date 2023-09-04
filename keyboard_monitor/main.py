@@ -1,4 +1,3 @@
-from copy import deepcopy
 from datetime import datetime
 from logging import getLogger, basicConfig
 import os
@@ -31,7 +30,7 @@ def main(
     record_dir: str = DEFAULT_RECORD_DIR,
     record_filename: str = DEFAULT_RECORD_FILENAME,
     log_level: str = "INFO",
-):
+) -> KeyboardMonitor:
 
     # setup
     ###########################################################
@@ -52,12 +51,18 @@ def main(
         logger.debug(f"{key} pressed")
 
     def on_release_callback(key):
-        combo = deepcopy(key_combo_monitor.key_combo)
+        combo = key_combo_monitor.key_combo
         key_combo_monitor.deactivate_key(key)
         if not key_combo_monitor.combo_is_active():
             recorder.record({
                 "timestamp": datetime.now().isoformat(),
-                "combo": [[str(k) for k in c] for c in combo]
+                "combo": [
+                    {
+                        "timestamp": c.timestamp.isoformat(),
+                        "keys": [str(k) for k in c.keys],
+                    }
+                    for c in combo.combo
+                ],
             })
 
     # create keyboard monitor
@@ -68,7 +73,7 @@ def main(
 
     # start
     ###########################################################
-    keyboard_monitor.start()
+    return keyboard_monitor.start()
 
 
 if __name__ == "__main__":

@@ -85,7 +85,6 @@ keyboard_monitor_main(
 
 ```python
 # import
-from copy import deepcopy
 from datetime import datetime
 from keyboard_monitor.key_combo_monitor import KeyComboMonitor
 from keyboard_monitor.keyboard_monitor import KeyboardMonitor
@@ -105,12 +104,18 @@ def on_press_callback(key):
     key_combo_monitor.activate_key(key)
 
 def on_release_callback(key):
-    combo = deepcopy(key_combo_monitor.key_combo)
+    combo = key_combo_monitor.key_combo
     key_combo_monitor.deactivate_key(key)
     if not key_combo_monitor.combo_is_active():
         recorder.record({
             "timestamp": datetime.now().isoformat(),
-            "combo": [[str(k) for k in c] for c in combo]
+            "combo": [
+                {
+                    "timestamp": c.timestamp.isoformat(),
+                    "keys": [str(k) for k in c.keys],
+                }
+                for c in combo.combo
+            ]
         })
 
 # create keyboard monitor
@@ -139,8 +144,14 @@ The format of contents of the JSON file is as follows:
     {
         "timestamp": "%Y-%m-%dT%H:%M:%S.%f",
         "combo": [
-            ["KEY1"],
-            ["KEY1", "KEY2"],
+            {
+                "timestamp": "%Y-%m-%dT%H:%M:%S.%f",
+                "keys": ["KEY1"]
+            },
+            {
+                "timestamp": "%Y-%m-%dT%H:%M:%S.%f",
+                "keys": ["KEY1", "KEY2"]
+            },
             ...
         ]
     },

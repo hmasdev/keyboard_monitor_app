@@ -23,6 +23,7 @@ class KeyboardMonitor:
         )
         self.listener.start()
         self.listener.join()
+        return self
 
     def stop(self):
         self.listener.stop()
