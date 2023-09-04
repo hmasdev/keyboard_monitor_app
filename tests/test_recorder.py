@@ -16,7 +16,7 @@ def test_instance():
 def test_get_current_file_path(mocker):
 
     # setup
-    expected = "/home/user/.keyboard_monitor/20210102030405.json"
+    expected = os.path.join("/home/user/.keyboard_monitor", "20210102030405.json")  # noqa
     direc = os.path.dirname(expected)
     filename = os.path.basename(expected)
 
@@ -31,7 +31,7 @@ def test_get_current_file_path(mocker):
     ).get_current_file_path()
 
     # assert
-    assert actual == expected
+    assert actual.replace('\\', '/') == expected.replace('\\', '/')
     mock_datetime_datetime.now.assert_called_once()
 
 
@@ -48,7 +48,7 @@ def test_record(
 ):
 
     # setup
-    expected = "/home/user/.keyboard_monitor/20210102030405.json"
+    expected = os.path.join("/home/user/.keyboard_monitor", "20210102030405.json")  # noqa
     direc = os.path.dirname(expected)
     filename = os.path.basename(expected)
 
